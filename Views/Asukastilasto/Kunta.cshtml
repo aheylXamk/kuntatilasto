@@ -1,0 +1,89 @@
+@{
+  int maara;
+  int keskiArvo;
+  int summa= 0;
+  int laskuri =0;
+  int summaNaiset = 0;
+  double osuus = 0;
+  double pyoOsuus;
+}
+
+<h2>Asukastilasto</h2>  
+
+<form method="post" action="/asukastilasto/rajaa">
+
+  <p>Näytä vain ensimmäiset</p>
+
+<input class="form-control mb-3" type="number" name="maara" min="5" max="313"/> <p>kuntaa.</p>
+
+<input class="btn btn-primary" type="submit" name="rajaa" value="Hae"/>
+
+</form>
+
+<hr/>
+
+<form method="post" action="/asukastilasto/haku">
+
+  <p>Hae kuntaa nimellä</p>
+
+<input class="form-control mb-3" type="text" name="hakuehto"/>
+
+<input class="btn btn-primary" type="submit" name="haku" value="Hae"/>
+
+</form>
+
+<div class="container" style="padding:15px">
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Kunta</th>
+      <th scope="col">Asukkaat yhteensä</th> 
+      <th scope="col">Naiset</th>
+      <th scope="col">Miehet</th> 
+    </tr>
+  </thead>
+  <tbody>
+      @foreach (KuntaTieto kunta in Model) {
+        laskuri++;
+    <tr>
+      <td>@kunta.kunta</td>
+      <td>@kunta.asukkaatYhteensa</td>     
+      <td>@kunta.asukkaatNaiset</td>
+      <td>@kunta.asukkaatMiehet</td>
+    </tr>
+     }
+  </tbody>
+</table>
+
+
+@foreach (KuntaTieto kunta in Model)
+{
+    summa+=kunta.asukkaatYhteensa;   
+
+    summaNaiset+=kunta.asukkaatNaiset;
+}
+
+@{
+    maara = laskuri;
+    keskiArvo = summa/maara;
+
+    osuus = ((double)summaNaiset/summa*100);
+
+    pyoOsuus = Math.Round(osuus, 2);
+
+
+    <h4>Listassa olevien kuntien määrä: @maara</h4>
+    <h4>Näiden kuntien asukasluvun keskiarvo: @keskiArvo</h4>
+    <h4>Naisten prosentuaalinen osuus tästä väestöstä: @pyoOsuus %</h4>
+}
+
+
+<form method="post" action="/asukastilasto/Index">
+
+<input class="btn btn-primary" type="submit" name="palaa" value="Palaa koko listaukseen"/>
+
+</form>
+
+
+</div>
